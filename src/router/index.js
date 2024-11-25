@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ContactView from "@/views/ContactView.vue";
+import ApiView from "@/views/ApiView.vue";
 
 const routes = [
   {
@@ -13,6 +14,12 @@ const routes = [
     name: "contact",
     component: ContactView,
   },
+  {
+    path: "/api",
+    name: "api",
+    component: ApiView,
+  },
+
 ];
 
 const router = createRouter({
