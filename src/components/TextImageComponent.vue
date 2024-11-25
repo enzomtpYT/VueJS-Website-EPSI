@@ -85,14 +85,15 @@ Never gonna tell a lie and hurt you</p>
 .comptextimg-img {
   aspect-ratio: 16/9;
   border-radius: 8px;
-  height: 300px;
+  width: 100%;
 }
 
-.textcomp-text{
-  font-size: 0.5em;
-  line-height: 0.5em;
+.textcomp-text {
+  font-size: 0.7em;
+  line-height: 0.76em;
   padding: 5px;
   text-align: left;
+  flex: 1;
 }
 
 .textimg {
