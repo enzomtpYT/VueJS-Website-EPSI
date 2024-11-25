@@ -39,6 +39,7 @@
 <script>
 export default {
     data() {
+        // Definition de toutes le variables
         return {
             url: '',
             method: 'GET',
@@ -52,6 +53,13 @@ export default {
         }
     },
     methods: {
+        // Definitions des fonctions
+        // Validation de l'url avec regex
+        validateURL(url) {
+            const re = /^(http|https):\/\/[^ "]+$/;            
+            return re.test(url);
+        },
+        // Validation du formulaire
         validateForm() {
             this.urlError = '';
             this.methodError = '';
@@ -59,19 +67,23 @@ export default {
             this.formMessage = '';
             this.formMessageColor = '';
             this.results = '';
-
-            if (!this.url) {
+            // Verifie l'url avec  la méthode validateURL
+            if (!this.his.url) {
                 this.urlError = 'Url requis';
+            } else if (!this.validateURL(this.url)) {
+                this.urlError = 'L\'url n\'est pas valide';
             }
+            // Verifie la méthode http(s)
             if (!this.method) {
                 this.methodError = 'Méthode requise';
             }
-
-            if (this.url && this.method) {
+            // Si il n'y a pas d'erreurs envoie la requete
+            if (!this.methodError && !this.urlError) {
                 this.sendApiRequest(this.url, this.method, this.parameters);
             }
         },
         sendApiRequest(url, method, parameters) {
+            // Si la méthode est GET ou HEAD une requete HTTP(s) ne peut pas avoir de paramètres
             if (method == 'GET' || HEAD) {
                 parameters = null;
             } else {
@@ -82,6 +94,7 @@ export default {
                     return;
                 }
             }
+            // Envoie la requete
             fetch(url, {
                 method: method,
                 headers: {
@@ -89,11 +102,13 @@ export default {
                 },
                 body: parameters
             })
+            // Si la requete est un succès envoyer les données à la méthode results
             .then(response => response.json())
             .then(data => {
                 console.log(data);
                 this.results = JSON.stringify(data, null, 2);
             })
+            // Si la requete est un échec envoyer l'erreur à la méthode results
             .catch(error => {
                 console.error('Error:', error);
                 this.results = 'Erreur: ' + error;
