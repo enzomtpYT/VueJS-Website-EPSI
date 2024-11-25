@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <TextImageComponent description="Welcome to Your Vue.js App" title="Hi!" imgsrc="https://tse1.mm.bing.net/th?id=OIP.eh5RRJ5l1pqHQDN1ubb1VAHaEx&pid=15.1" />
+    <TextImageComponent/>
   </div>
 </template>
 
