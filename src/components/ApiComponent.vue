@@ -29,7 +29,7 @@
                 </form>
                 <div class="resultats" v-if="results">
                     <h2>Résultats:</h2>
-                    <p class="results">{{ results }}</p>
+                    <pre><p class="results">{{ results }}</p></pre>
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@ export default {
             this.formMessageColor = '';
             this.results = '';
             // Verifie l'url avec  la méthode validateURL
-            if (!this.his.url) {
+            if (!this.url) {
                 this.urlError = 'Url requis';
             } else if (!this.validateURL(this.url)) {
                 this.urlError = 'L\'url n\'est pas valide';
@@ -83,14 +83,16 @@ export default {
             }
         },
         sendApiRequest(url, method, parameters) {
-            // Si la méthode est GET ou HEAD une requete HTTP(s) ne peut pas avoir de paramètres
-            if (method == 'GET' || HEAD) {
+            // Si la méthode est GET ou HEAD, ajouter les paramètres à l'URL
+            if (method == 'GET' || method == 'HEAD') {
+                const queryParams = new URLSearchParams(parameters).toString();
+                url += '?' + queryParams;
                 parameters = null;
             } else {
                 try {
                     parameters = JSON.parse(parameters);
                 } catch (error) {
-                    this.parametersError = 'Paramètres invalides';
+                    this.parametersError = 'Paramètres invalides: ' + error;
                     return;
                 }
             }
@@ -100,7 +102,7 @@ export default {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: parameters
+                body: parameters ? JSON.stringify(parameters) : null
             })
             // Si la requete est un succès envoyer les données à la méthode results
             .then(response => response.json())
@@ -140,13 +142,14 @@ export default {
 }
 .results {
     padding: 5px;
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: bold;
     border: 4px solid #00ff80;
     color: #00ff80;
     background-color: #1100ff60;
     width: 100%;
     height: 100%;
+    overflow: auto;
 }
 form {
     display: flex;
@@ -196,5 +199,19 @@ button:active {
 .formMessage {
     padding-top: 10px;
     font-size: 1.5em;
+}
+
+@media screen and (max-width: 1200px) {
+    .apidiv {
+        flex-direction: column;
+    }
+    form {
+        width: 100%;
+    }
+    .resultats {
+        font-size: 0.8em;
+        width: 100%;
+    }
+    
 }
 </style>

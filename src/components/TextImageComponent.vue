@@ -58,9 +58,7 @@ Never gonna make you cry<br>
 Never gonna say goodbye<br>
 Never gonna tell a lie and hurt you</p>
         </div>
-        <div class="img">
-          <img class="comptextimg-img" src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB14ZAZXvYR0JMDHzRz7hdvw76w9Q" alt="image"/>
-        </div>
+        <img class="comptextimg-img" src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB14ZAZXvYR0JMDHzRz7hdvw76w9Q" alt="image"/>
       </div>
     </div>  
   </div>
@@ -72,9 +70,9 @@ Never gonna tell a lie and hurt you</p>
   justify-content: center;
   align-items: center;
 }
+
 .card {
   display: flex;
-  justify-content: center;
   background-color: #3b2858;
   border-radius: 25px;
   padding: 20px;
@@ -82,10 +80,15 @@ Never gonna tell a lie and hurt you</p>
   color: #FFF;
 }
 
+.text {
+  flex: 1;
+  padding: 10px;
+  text-align: justify;
+}
+
 .comptextimg-img {
   aspect-ratio: 16/9;
   border-radius: 8px;
-  width: 100%;
 }
 
 .textcomp-text {
@@ -99,6 +102,30 @@ Never gonna tell a lie and hurt you</p>
 .textimg {
   display: flex;
   align-items: center;
-  gap: 10px;
+  width: 100%;
+}
+
+@media screen and (max-width: 1300px) {
+  .comptextimg-img {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .comptextimg-img {
+    width: 100%;
+  }
+  .textimg {
+    flex-direction: column;
+  }
+  .text {
+    padding: 0;
+  }
+  .textcomp-text {
+    font-size: 1em;
+    line-height: 1.2em;
+    padding: 5px;
+  }
+  
 }
 </style>
