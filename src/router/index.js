@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ContactView from "@/views/ContactView.vue";
 import ApiView from "@/views/ApiView.vue";
+import BonusView from "@/views/BonusView.vue";
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: "/api",
     name: "api",
     component: ApiView,
+  },
+  {
+    path: "/bonus",
+    name: "bonus",
+    component: BonusView,
   },
 
 ];

@@ -2,7 +2,7 @@
     <div>
         <h1>Api:</h1>
         <div class="container">
-            <div class="apidiv">
+            <div class="pform">
                 <form @submit.prevent="validateForm">
                     <label for="url">Url:</label>
                     <input type="text" id="url" v-model="url">
@@ -27,7 +27,7 @@
                     <button type="submit">Envoyer</button>
                     <span v-if="formMessage" :style="{ color: formMessageColor }" class="formMessage">{{ formMessage }}</span>
                 </form>
-                <div class="resultats" v-if="results">
+                <div class="resultscard" v-if="results">
                     <h2>Résultats:</h2>
                     <pre><p class="results">{{ results }}</p></pre>
                 </div>
@@ -121,24 +121,11 @@ export default {
 </script>
 
 <style>
-.container {
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
-}
-.apidiv {
-    display: flex;
-    flex-direction: row;
-    background-color: #3b2858;
-    width: 90%;
-    padding: 15px 30px 30px 30px;
-    border-radius: 10px;
-}
-.resultats {
+.resultscard {
     padding-top: 20px;
     width: 65%;
     text-align: left;
-    padding: 15px 30px 30px 30px;
+    padding: 0px 30px 30px 30px;
 }
 .results {
     padding: 5px;
@@ -151,67 +138,14 @@ export default {
     height: 100%;
     overflow: auto;
 }
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 35%;
-}
-label {
-    font-size: 1.5em;
-    text-align: left;
-    font-weight: bold;
-    padding: 5px 0;
-}
-input, textarea, select {
-    font-size: 1.5em;
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #3b2858;
-    color: black;
-}
-option {
-    font-size: 1em;
-    color: black;
-}
-button {
-    font-size: 1.5em;
-    padding: 10px;
-    margin-top: 20px;
-    border-radius: 5px;
-    border: 1px solid #3b285800;
-    background-color: #00ff80;
-    color: #3b2858;
-    transition: 0.05s;
-}
-button:hover {
-    background-color: #3b2858;
-    color: #00ff80;
-    border: 1px solid #00ff80;
-}
-button:active {
-    transform: scale(0.95);
-}
-.error {
-    color: red;
-    font-size: 0.9em;
-}
-.formMessage {
-    padding-top: 10px;
-    font-size: 1.5em;
-}
-
 @media screen and (max-width: 1200px) {
-    .apidiv {
-        flex-direction: column;
-    }
-    form {
-        width: 100%;
-    }
-    .resultats {
+    .resultscard {
         font-size: 0.8em;
         width: 100%;
     }
-    
+    .pform {
+        flex-direction: column;
+    }
 }
+
 </style>
