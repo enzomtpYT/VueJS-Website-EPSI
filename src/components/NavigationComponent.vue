@@ -7,7 +7,6 @@
   </nav>
   <div class="divider"></div>
   <div class="margin"></div>
-  <router-view />
 </template>
 
 <style>

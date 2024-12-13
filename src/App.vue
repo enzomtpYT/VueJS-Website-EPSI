@@ -1,6 +1,7 @@
 <template>
   <div>
     <NavigationComponent/>
+    <router-view />
   </div>
 </template>
 <style src="@/assets/common.css"></style>

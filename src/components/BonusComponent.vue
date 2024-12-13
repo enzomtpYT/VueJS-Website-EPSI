@@ -1,24 +1,38 @@
 <template>
     <div>
-        <h1>Nous contactez:</h1>
+        <h1>Section 1:</h1>
         <div class="container">
             <div class="pform">
-                <form @submit.prevent="validateForm">
-                    <label for="name">Nom:</label>
-                    <input type="text" id="name" v-model="name">
-                    <span v-if="nameError" class="error">{{ nameError }}</span>
-
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" v-model="email">
-                    <span v-if="emailError" class="error">{{ emailError }}</span>
-
-                    <label for="message">Message:</label>
-                    <textarea id="message" v-model="message"></textarea>
-                    <span v-if="messageError" class="error">{{ messageError }}</span>
-
-                    <button type="submit">Envoyer</button>
-                    <span v-if="formMessage" :style="{ color: formMessageColor }" class="formMessage">{{ formMessage }}</span>
+                <form @submit.prevent="validateUser">
+                    <label for="userid">User ID:</label>
+                    <input type="text" id="userid" v-model="userid" @input="validateUser">
+                    <span v-if="useridError" class="error">{{ useridError }}</span>
                 </form>
+                <div class="resultscard" v-if="results">
+                    <h2>Résultats:</h2>
+                    <div class="lanyard">
+                        <div class="profile">
+                            <img class="pfp" :src="pfp" alt="User Avatar" />
+                            <p>{{ username }} | {{ tag }}</p>
+                            <p>{{ olinestatus }}</p>
+                        </div>
+                        <div class="activity">
+                            <img class="actimg" :src="actimg" alt="Activity Image" />
+                            <div>
+                                <p>{{ activity }}</p>
+                                <p>{{ state }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <pre><p class="results">{{ results }}</p></pre>
+                </div>
+            </div>
+        </div>
+        <div class="divider mt-5 mb-5"></div>
+        <h1>Bonus:</h1>
+        <div class="container">
+            <div class="pform">
+                <!-- Bonus content goes here -->
             </div>
         </div>
     </div>
@@ -29,87 +43,107 @@ export default {
     data() {
         // Definition de toutes le variables
         return {
-            name: '',
-            email: '',
-            message: '',
-            nameError: '',
-            emailError: '',
-            messageError: '',
-            formMessage: '',
-            formMessageColor: ''
+            userid: '',
+            useridError: '',
+            results: '',
+            pfp: '',
+            username: '',
+            tag: '',
+            olinestatus: ''
         };
+    },
+    mounted() {
+        // Code à exécuter au chargement de la page (import de lanyardjs)
+        if (!window.lanyard) {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/gh/0x5841524f4e/js-lanyard/lanyard.js';
+            script.onload = () => console.log('Lanyard script loaded successfully.');
+            script.onerror = () => console.error('Failed to load the Lanyard script.');
+            document.head.appendChild(script);
+        } else {
+            console.log('Lanyard script already loaded.');
+        }
     },
     methods: {
         // Definitions des fonctions
-        // Validation du formulaire
-        validateForm() {
-            this.nameError = this.emailError = this.messageError = '';
-            // Verifie si le nom est vide ou a moins de 3 caracteres
-            if (!this.name && this.name.length <= 3) {
-                this.nameError = 'Le nom est requis. Et doit avoir au moins 3 caractères.';
-            }
-            // Verifie si l'email est vide ou n'est pas valide
-            if (!this.email) {
-                this.emailError = 'L\'email est requis.';
-            } else if (!this.validEmail(this.email)) {
-                this.emailError = 'L\'email n\'est pas valide.';
-            }
-            // Verifie si le message est vide ou a moins de 3 caracteres
-            if (!this.message && this.message.length <= 3) {
-                this.messageError = 'Le message est requis. Et doit avoir au moins 3 caractères.';
-            }
-            // Si il ,n'y a pas d'erreurs envoie le message
-            if (!this.nameError && !this.emailError && !this.messageError) {
-                this.sendWebhook(this.name, this.email, this.message);
+        validateUser() {
+            if (/^\d{17,18}$/.test(this.userid)) {
+                this.socket();
+            } else {
+                this.useridError = 'L\'ID utilisateur doit contenir uniquement des chiffres et être composé de 17 à 18 caractères.';
             }
         },
-        // Validation de l'email avec regex
-        validEmail(email) {
-            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
-            return re.test(email);
-        },
-        // Envoie du message via le webhook discord
-        sendWebhook(name, email, message) {
-            const url = "https://discord.com/api/webhooks/1309485318969495572/IHGFgyq3BCa0c4heSp4vTMNnAgrJFsqkomH3xjoG_WcZo7ip8MztNOPuHyljpna8nMsb";
-            // Crééer le message avec embed
-            const data = {
-              "content": null,
-              "embeds": [
-                {
-                  "title": "Nouveau Message!",
-                  "color": 8912728,
-                  "fields": [
-                    {
-                      "name": `${name} - ${email}`,
-                      "value": message,
+        async socket() {
+            this.useridError = '';
+            if (this.userid === '') {
+                this.useridError = 'Veuillez entrer un ID utilisateur';
+            } else {
+                try {
+                    let lanwebsock
+                    if (lanwebsock) {
+                        lanwebsock.close();
                     }
-                  ]
+                    lanwebsock = lanyard({
+                        userId: this.userid,
+                        socket: true,
+                        onPresenceUpdate: this.updateUser // presenceData => updateUser(data)
+                    })
+                } catch (error) {
+                    this.useridError = 'Erreur lors de la récupération des résultats.';
+                    console.error('Lanyard error:', error);
                 }
-              ],
-              "attachments": []
             }
-            // Envoie le message
-            fetch(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            // Si le message est envoyé avec succès affiche un message de succès
-            }).then(() => {
-                this.name = this.email = this.message = '';
-                this.formMessage = 'Message envoyé avec succès!';
-                this.formMessageColor = 'green';
-            //  Si il y a une erreur affiche un message d'erreur
-            }).catch(() => {
-                this.formMessage = 'Une erreur est survenue lors de l\'envoi du message.';
-                this.formMessageColor = 'red';
-                this.$refs.formMessage.style.color = 'red';
-            });
+        },
+        updateUser(data) {
+            this.results = JSON.stringify(data, null, 2);
+            this.pfp = `https://cdn.discordapp.com/avatars/${data.discord_user.id}/${data.discord_user.avatar}.png`;
+            this.username = data.discord_user.username;
+            this.tag = data.discord_user.clan.tag || 'No Clan';
+            this.olinestatus = data.discord_status;
+            this.activity = `${data.activities[0].name} | ${data.activities[0].details}` || 'No Activity';
+            this.state = data.activities[0].state || 'No State';
+            if (data.activities[0].assets && data.activities[0].assets.large_image) {
+                const largeImage = data.activities[0].assets.large_image;
+                if (largeImage.startsWith('mp:external')) {
+                    this.actimg = `https://media.discordapp.net/external/${largeImage.split('external/')[1]}`;
+                } else {
+                    this.actimg = `https://cdn.discordapp.com/app-assets/${data.activities[0].application_id}/${largeImage}.png?size=160`;
+                }
+            } else {
+                this.actimg = '';
+            }
         }
     }
 };
 </script>
 
 <style>
+.lanyard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    border: 1px solid #ccc;
+}
+.profile {
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+}
+.activity {
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+}
+.pfp {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.actimg {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+}
 </style>
